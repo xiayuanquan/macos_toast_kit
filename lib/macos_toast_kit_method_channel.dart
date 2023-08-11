@@ -21,13 +21,17 @@ class MethodChannelMacosToastKit extends MacosToastKitPlatform {
     required double height,
     String? systemImageName,
     required String toastContent,
-    required int showDuration}) async {
+    required int showDuration,
+    required int applicationMode,
+    required int position}) async {
     final ret = await methodChannel.invokeMethod<bool>('show',
         [{"width":width,
           "height":height,
           "systemImageName":systemImageName,
           "toastContent":toastContent,
-          "showDuration":showDuration}
+          "showDuration":showDuration,
+          "applicationMode":applicationMode,
+          "position":position}
         ]);
     return ret;
   }

@@ -5,3 +5,8 @@
 ## 0.0.2
 
 * add manual close method
+
+## 0.0.3
+
+* 1.support application mode
+* 2.support position

@@ -32,7 +32,9 @@ abstract class MacosToastKitPlatform extends PlatformInterface {
     required double height,
     String? systemImageName,
     required String toastContent,
-    required int showDuration}) {
+    required int showDuration,
+    required int applicationMode,
+    required int position,}) {
     throw UnimplementedError('show() has not been implemented.');
   }
 

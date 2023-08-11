@@ -31,9 +31,8 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
         if let dic = arguments!.first {
             
             /// 判断
-            if(isShowing()) {
-                return
-            }
+            guard let containerView = NSApplication.shared.mainWindow?.contentView else { return }
+            guard !isShowing() else { return }
             
             /// 参数
             let toastWidth = dic["width"] as! Double
@@ -41,17 +40,43 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
             let toastSFImageName = dic["systemImageName"] as? String
             let toastContent = dic["toastContent"] as! String
             let toastShowDuration = dic["showDuration"] as! Int
+            let applicationMode = dic["applicationMode"] as! Int
+            let position = dic["position"] as! Int
             
-            /// 模式
-            var bgColor: NSColor = NSColor(red: 236/255.0, green: 237/255.0, blue: 238/255.0, alpha: 1.0)
-            var textColor: NSColor = NSColor(red: 109/255.0, green: 110/255.0, blue: 111/255.0, alpha: 1.0)
-            if NSApp.effectiveAppearance.name == .darkAqua {
+            /// 模式(0-亮色模式，1-暗黑模式， 2-跟随系统)
+            let _bgColor: NSColor = NSColor(red: 236/255.0, green: 237/255.0, blue: 238/255.0, alpha: 1.0)
+            let _textColor: NSColor =  NSColor(red: 109/255.0, green: 110/255.0, blue: 111/255.0, alpha: 1.0)
+            var bgColor: NSColor = _bgColor
+            var textColor: NSColor = _textColor
+            switch applicationMode {
+            case 0:
+                bgColor = _bgColor
+                textColor = _textColor
+                break
+            case 1:
                 bgColor = NSColor.darkGray
                 textColor = NSColor.lightGray
-            } else {
-                bgColor = NSColor(red: 236/255.0, green: 237/255.0, blue: 238/255.0, alpha: 1.0)
-                textColor = NSColor(red: 109/255.0, green: 110/255.0, blue: 111/255.0, alpha: 1.0)
+                break
+            case 2:
+                if NSApp.effectiveAppearance.name == .darkAqua {
+                    bgColor = NSColor.darkGray
+                    textColor = NSColor.lightGray
+                } else {
+                    bgColor = _bgColor
+                    textColor = _textColor
+                }
+                break
+            default:
+                if NSApp.effectiveAppearance.name == .darkAqua {
+                    bgColor = NSColor.darkGray
+                    textColor = NSColor.lightGray
+                } else {
+                    bgColor = _bgColor
+                    textColor = _textColor
+                }
+                break
             }
+            
             
             /// 容器
             let toastView = NSView()
@@ -61,13 +86,70 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
             toastView.wantsLayer = true
             toastView.layer?.backgroundColor = bgColor.cgColor
             toastView.layer?.cornerRadius = 10
-            NSApplication.shared.mainWindow?.contentView?.addSubview(toastView)
-            NSLayoutConstraint.activate([
-                toastView.centerXAnchor.constraint(equalTo: toastView.superview!.centerXAnchor),
-                toastView.centerYAnchor.constraint(equalTo: toastView.superview!.centerYAnchor),
-                toastView.widthAnchor.constraint(equalToConstant: toastWidth),
-                toastView.heightAnchor.constraint(equalToConstant: toastHeight)
-            ])
+            containerView.addSubview(toastView)
+            
+            
+            /// 位置(0-居中显示，1-居左显示， 2-居上显示，3-居右显示，4-居下显示)
+            var constraints: [NSLayoutConstraint] = []
+            switch position {
+            case 0:
+                constraints = [
+                    toastView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                    toastView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                    toastView.widthAnchor.constraint(equalToConstant: toastWidth),
+                    toastView.heightAnchor.constraint(equalToConstant: toastHeight)
+                ]
+                break
+             case 1:
+                let width = containerView.frame.size.width
+                let constant = (width/2 > toastWidth) ? (width/2 - toastWidth) : (toastWidth/2)
+                constraints = [
+                     toastView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant: -constant),
+                     toastView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                     toastView.widthAnchor.constraint(equalToConstant: toastWidth),
+                     toastView.heightAnchor.constraint(equalToConstant: toastHeight)
+                 ]
+                break
+             case 2:
+                let height = containerView.frame.size.height
+                let constant = (height/2 > toastHeight) ? (height/2 - toastHeight) : (toastHeight/2)
+                constraints = [
+                     toastView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                     toastView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor, constant: -constant),
+                     toastView.widthAnchor.constraint(equalToConstant: toastWidth),
+                     toastView.heightAnchor.constraint(equalToConstant: toastHeight)
+                 ]
+                break
+             case 3:
+                let width = containerView.frame.size.width
+                let constant = (width/2 > toastWidth) ? (width/2 - toastWidth) : (toastWidth/2)
+                constraints = [
+                     toastView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor, constant: constant),
+                     toastView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                     toastView.widthAnchor.constraint(equalToConstant: toastWidth),
+                     toastView.heightAnchor.constraint(equalToConstant: toastHeight)
+                 ]
+                break
+             case 4:
+                let height = containerView.frame.size.height
+                let constant = (height/2 > toastHeight) ? (height/2 - toastHeight) : (toastHeight/2)
+                constraints = [
+                     toastView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                     toastView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor, constant: constant),
+                     toastView.widthAnchor.constraint(equalToConstant: toastWidth),
+                     toastView.heightAnchor.constraint(equalToConstant: toastHeight)
+                 ]
+                break
+            default:
+                constraints = [
+                    toastView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                    toastView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                    toastView.widthAnchor.constraint(equalToConstant: toastWidth),
+                    toastView.heightAnchor.constraint(equalToConstant: toastHeight)
+                ]
+                break
+            }
+            NSLayoutConstraint.activate(constraints)
 
 
             /// 图标
@@ -84,7 +166,7 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
                         toastView.addSubview(imageView)
                         NSLayoutConstraint.activate([
                             imageView.centerXAnchor.constraint(equalTo: toastView.centerXAnchor),
-                            imageView.centerYAnchor.constraint(equalTo: toastView.centerYAnchor, constant: -iconHeight/3),
+                            imageView.centerYAnchor.constraint(equalTo: toastView.centerYAnchor, constant: -iconHeight/2.5),
                             imageView.widthAnchor.constraint(equalToConstant: iconHeight),
                             imageView.heightAnchor.constraint(equalToConstant: iconHeight)
                         ])
