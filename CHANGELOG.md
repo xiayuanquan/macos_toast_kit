@@ -10,3 +10,7 @@
 
 * 1.support application mode
 * 2.support position
+
+## 0.0.4
+
+* control color bug fixed

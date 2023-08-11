@@ -46,21 +46,26 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
             /// 模式(0-亮色模式，1-暗黑模式， 2-跟随系统)
             let _bgColor: NSColor = NSColor(red: 236/255.0, green: 237/255.0, blue: 238/255.0, alpha: 1.0)
             let _textColor: NSColor =  NSColor(red: 109/255.0, green: 110/255.0, blue: 111/255.0, alpha: 1.0)
+            let _sfClolor: NSColor =  NSColor(red: 109/255.0, green: 110/255.0, blue: 111/255.0, alpha: 1.0)
             var bgColor: NSColor = _bgColor
             var textColor: NSColor = _textColor
+            var sfClolor: NSColor = _sfClolor
             switch applicationMode {
             case 0:
                 bgColor = _bgColor
                 textColor = _textColor
+                sfClolor = _sfClolor
                 break
             case 1:
                 bgColor = NSColor.darkGray
-                textColor = NSColor.lightGray
+                textColor = NSColor.white.withAlphaComponent(0.85)
+                sfClolor = NSColor.white.withAlphaComponent(0.85)
                 break
             case 2:
                 if NSApp.effectiveAppearance.name == .darkAqua {
                     bgColor = NSColor.darkGray
-                    textColor = NSColor.lightGray
+                    textColor = NSColor.white.withAlphaComponent(0.85)
+                    sfClolor = NSColor.white.withAlphaComponent(0.85)
                 } else {
                     bgColor = _bgColor
                     textColor = _textColor
@@ -69,10 +74,12 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
             default:
                 if NSApp.effectiveAppearance.name == .darkAqua {
                     bgColor = NSColor.darkGray
-                    textColor = NSColor.lightGray
+                    textColor = NSColor.white.withAlphaComponent(0.85)
+                    sfClolor = NSColor.white.withAlphaComponent(0.85)
                 } else {
                     bgColor = _bgColor
                     textColor = _textColor
+                    sfClolor = _sfClolor
                 }
                 break
             }
@@ -163,6 +170,7 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
                         let config = NSImage.SymbolConfiguration(pointSize: iconHeight, weight: .regular)
                         imageView.image = systemImage.withSymbolConfiguration(config)
                         imageView.translatesAutoresizingMaskIntoConstraints = false
+                        imageView.contentTintColor = sfClolor
                         toastView.addSubview(imageView)
                         NSLayoutConstraint.activate([
                             imageView.centerXAnchor.constraint(equalTo: toastView.centerXAnchor),
@@ -226,6 +234,7 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
     
     private func close() {
         if let toastView = NSApplication.shared.mainWindow?.contentView?.subviews.first(where: { $0.identifier?.rawValue == "toast__macos" }) {
+            toastView.identifier = nil
             toastView.removeFromSuperview()
         }
     }

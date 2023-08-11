@@ -58,9 +58,9 @@ class _MyAppState extends State<MyApp> {
           child: GestureDetector(
             onTap: () {
               // MacosToastKit().show();
-              // MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝");
+              MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝");
               // MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝", applicationMode: 1);
-              MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝", applicationMode: 0, position: 0);
+              // MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝", applicationMode: 0, position: 0);
               // MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝", applicationMode: 0, position: 1);
               // MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝", applicationMode: 2, position: 2);
               // MacosToastKit().show(systemImageName: "hammer.circle.fill", toastContent: "已拷贝", applicationMode: 2, position: 3);
