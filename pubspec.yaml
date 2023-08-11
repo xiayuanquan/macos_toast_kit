@@ -1,6 +1,6 @@
 name: macos_toast_kit
 description: A Flutter Plugin, Support System Toast similar to macOS.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/xiayuanquan/macos_toast_kit.git
 
 environment:
