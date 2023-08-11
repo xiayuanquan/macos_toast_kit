@@ -17,6 +17,7 @@ public class MacosToastKitPlugin: NSObject, FlutterPlugin {
             show(arguments)
             result(true)
         case "close":
+            close()
             result(true)
         default:
             result(FlutterMethodNotImplemented)
