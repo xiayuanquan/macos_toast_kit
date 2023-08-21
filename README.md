@@ -6,12 +6,16 @@ A new Flutter plugin project.
 
 Flutter Plugin, Support System Toast similar to macOS
 
-* 1.support application mode
+* 1.Support setting icons, but only support the SF symbols that come with the system
+  * example 
+    * systemImageName: "hammer.circle.fill"
+
+* 2.support application mode
   * 0 : light mode
   * 1 : dark mode
   * 2 : follow the system
 
-* 2.support position
+* 1.support position
   * 0 : show at center 
   * 1 : show at left
   * 2 : show at top
@@ -22,5 +26,3 @@ Flutter Plugin, Support System Toast similar to macOS
 
 ![light_img.png](light_img.png)
 ![dark_img.png](dark_img.png)
-
-应用的模式，整型， 0-亮色模式，1-暗黑模式， 2-跟随系统
