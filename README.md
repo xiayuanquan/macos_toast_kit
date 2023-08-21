@@ -15,7 +15,7 @@ Flutter Plugin, Support System Toast similar to macOS
   * 1 : dark mode
   * 2 : follow the system
 
-* 1.support position
+* 3.support position
   * 0 : show at center 
   * 1 : show at left
   * 2 : show at top
